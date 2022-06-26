@@ -1,10 +1,57 @@
+import { gql, useQuery } from "@apollo/client";
 import { DefaultControls, DefaultUi, Player, Youtube } from "@vime/react";
-import { CaretRight, DiscordLogo, FileArrowDown, Lightning } from "phosphor-react";
+import { CaretRight, CircleNotch, DiscordLogo, FileArrowDown, Lightning } from "phosphor-react";
 
 import '@vime/core/themes/default.css';
 import '@vime/core/themes/light.css';
 
-export function Video() {
+const GET_LESSON_QUERY = gql`
+  query LessonBySlug($slug: String) {
+    lesson(where: {slug: $slug}) {
+      title
+      videoId
+      description
+      teacher {
+        avatarURL
+        bio
+        name
+      }
+    }
+  }
+`
+
+type Teacher = {
+  avatarURL: string
+  bio: string
+  name: string
+}
+
+interface GetLessonBySlugResponse {
+  title: string
+  videoId: string,
+  description: string
+  teacher: Teacher
+}
+
+interface VideoProps {
+  lessonSlug?: string
+}
+
+export function Video({ lessonSlug }: VideoProps) {
+  const { data } = useQuery<{ lesson: GetLessonBySlugResponse }>(GET_LESSON_QUERY, {
+    variables: {
+      slug: lessonSlug
+    }
+  })
+
+  if (!data) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <CircleNotch size={ 80 } className='animate-spin' />
+      </div>
+    )
+  }
+
   return (
     <div className="flex-1">
       <div className="bg-black flex justify-center">
