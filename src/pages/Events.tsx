@@ -19,7 +19,7 @@ export function Events() {
             <Video lessonSlug={ slug } />
           ) : <div className="flex-1" />
         }
-        <Sidebar />
+        <Sidebar lessonSlug={ slug } />
       </main>
     </div>
   )

@@ -23,7 +23,11 @@ interface GetLessonsQueryResponse {
   }[]
 }
 
-export function Sidebar() {
+interface SidebarProps {
+  lessonSlug?: string
+}
+
+export function Sidebar({ lessonSlug }: SidebarProps) {
   const { data } = useQuery<GetLessonsQueryResponse>(GET_LESSONS_QUERY)
 
   return (
@@ -36,10 +40,10 @@ export function Sidebar() {
           data?.lessons.map(({ id, availableAt, lessonType, slug, title }) => (
             <Lesson
               key={ id }
-              title={ title }
-              slug={ slug }
-              type={ lessonType }
-              availableAt={ new Date(availableAt) }
+              slugActive={ lessonSlug }
+              lesson={{
+                title, slug, type: lessonType, availableAt: new Date(availableAt)
+              }}
             />
           ))
         }
