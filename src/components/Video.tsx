@@ -52,6 +52,8 @@ export function Video({ lessonSlug }: VideoProps) {
     )
   }
 
+  const { lesson: { title, description, videoId, teacher } } = data
+
   return (
     <div className="flex-1">
       <div className="bg-black flex justify-center">
@@ -61,7 +63,7 @@ export function Video({ lessonSlug }: VideoProps) {
             // @ts-ignore
             style={{ '--vm-player-theme': '#29292E' }}
           >
-            <Youtube videoId="92Vqk50QwF8" />
+            <Youtube key={ videoId } videoId={ videoId } />
             <DefaultUi noControls>
               <DefaultControls hideOnMouseLeave activeDuration={2000}  />
             </DefaultUi>
@@ -73,25 +75,25 @@ export function Video({ lessonSlug }: VideoProps) {
         <div className="flex items-start gap-16">
           <div className="flex-1">
             <h1 className="text-2xl font-bold">
-              Aula 01 - Abertura do IgniteLab
+              { title }
             </h1>
             <p className="mt-4 text-gray-200 leading-relaxed">
-              simply dummy text of the printing and typesetting industry.
-              Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-              when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+              { description }
             </p>
             <div className="flex items-center gap-4 mt-6">
               <img
                 className="h-16 w-16 rounded-full border-2 border-blue-500"
-                src="https://github.com/josemayconhs.png" alt="Avatar"
+                src={ teacher.avatarURL } alt="Avatar"
               />
               <div className="leading-relaxed">
                 <strong
                   className="font-bold text-2xl block"
                 >
-                  Maycon Silva
+                  { teacher.name }
                 </strong>
-                <span className="text-gray-200 text-sm block">Software engine</span>
+                <span className="text-gray-200 text-sm block">
+                  { teacher.bio }
+                </span>
               </div>
             </div>
           </div>
