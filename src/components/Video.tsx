@@ -4,6 +4,8 @@ import { CaretRight, CircleNotch, DiscordLogo, FileArrowDown, Lightning } from "
 
 import '@vime/core/themes/default.css';
 import '@vime/core/themes/light.css';
+import { isPast } from "date-fns";
+import { Navigate } from "react-router-dom";
 
 const GET_LESSON_QUERY = gql`
   query LessonBySlug($slug: String) {
@@ -11,6 +13,7 @@ const GET_LESSON_QUERY = gql`
       title
       videoId
       description
+      availableAt
       teacher {
         avatarURL
         bio
@@ -30,6 +33,7 @@ interface GetLessonBySlugResponse {
   title: string
   videoId: string,
   description: string
+  availableAt: Date
   teacher: Teacher
 }
 
@@ -52,7 +56,11 @@ export function Video({ lessonSlug }: VideoProps) {
     )
   }
 
-  const { lesson: { title, description, videoId, teacher } } = data
+  const { lesson: { title, description, videoId, teacher, availableAt } } = data
+
+  if (!isPast(new Date(availableAt))) {
+    return <Navigate to='/' replace />
+  }
 
   return (
     <div className="flex-1">

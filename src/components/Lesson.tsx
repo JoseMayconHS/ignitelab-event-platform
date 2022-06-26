@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import classNames from 'classnames'
 
 import pt from "date-fns/locale/pt/index"
+import { LessonLink } from "./LessonLink"
 
 export type LessonType = 'live' | 'class'
 
@@ -28,7 +29,7 @@ export function Lesson({ slugActive, lesson: { title, slug, availableAt, type }}
   const isMe = slugActive === slug
 
   return (
-    <Link to={`/event/lesson/${ slug }`}  className="group">
+    <LessonLink to={`/event/lesson/${ slug }`} className="group" active={ isLessonAvailable }>
       <span className="text-gray-300">
         { availableDateFormatted }
       </span>
@@ -69,6 +70,6 @@ export function Lesson({ slugActive, lesson: { title, slug, availableAt, type }}
           { title }
         </strong>
       </div>
-    </Link>
+    </LessonLink>
   )
 }
