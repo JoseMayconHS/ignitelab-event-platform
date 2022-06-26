@@ -12,12 +12,7 @@ export function App() {
   return (
     <RouterProvider>
       <ApolloProvider client={ apolloClient }>
-        <div className='flex flex-col min-h-screen'>
-          <Header />
-          <main className="flex flex-1">
-            <Router />
-          </main>
-        </div>
+        <Router />
       </ApolloProvider>
     </RouterProvider>
   )
