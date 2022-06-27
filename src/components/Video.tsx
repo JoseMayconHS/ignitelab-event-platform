@@ -1,54 +1,25 @@
-import { gql, useQuery } from "@apollo/client";
 import { DefaultControls, DefaultUi, Player, Youtube } from "@vime/react";
 import { CaretRight, CircleNotch, DiscordLogo, FileArrowDown, Lightning } from "phosphor-react";
-
-import '@vime/core/themes/default.css';
-import '@vime/core/themes/light.css';
 import { isPast } from "date-fns";
 import { Navigate } from "react-router-dom";
 
-const GET_LESSON_QUERY = gql`
-  query LessonBySlug($slug: String) {
-    lesson(where: {slug: $slug}) {
-      title
-      videoId
-      description
-      availableAt
-      teacher {
-        avatarURL
-        bio
-        name
-      }
-    }
-  }
-`
+import { useGetLessonBySlugQuery } from "../graphql/generated";
 
-type Teacher = {
-  avatarURL: string
-  bio: string
-  name: string
-}
-
-interface GetLessonBySlugResponse {
-  title: string
-  videoId: string,
-  description: string
-  availableAt: Date
-  teacher: Teacher
-}
+import '@vime/core/themes/default.css';
+import '@vime/core/themes/light.css';
 
 interface VideoProps {
   lessonSlug?: string
 }
 
 export function Video({ lessonSlug }: VideoProps) {
-  const { data } = useQuery<{ lesson: GetLessonBySlugResponse }>(GET_LESSON_QUERY, {
+  const { data } = useGetLessonBySlugQuery({
     variables: {
       slug: lessonSlug
     }
   })
 
-  if (!data) {
+  if (!data || !data.lesson) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <CircleNotch size={ 80 } className='animate-spin' />
@@ -88,22 +59,26 @@ export function Video({ lessonSlug }: VideoProps) {
             <p className="mt-4 text-gray-200 leading-relaxed">
               { description }
             </p>
-            <div className="flex items-center gap-4 mt-6">
-              <img
-                className="h-16 w-16 rounded-full border-2 border-blue-500"
-                src={ teacher.avatarURL } alt="Avatar"
-              />
-              <div className="leading-relaxed">
-                <strong
-                  className="font-bold text-2xl block"
-                >
-                  { teacher.name }
-                </strong>
-                <span className="text-gray-200 text-sm block">
-                  { teacher.bio }
-                </span>
-              </div>
-            </div>
+            {
+              teacher && (
+                <div className="flex items-center gap-4 mt-6">
+                  <img
+                    className="h-16 w-16 rounded-full border-2 border-blue-500"
+                    src={ teacher.avatarURL } alt="Avatar"
+                  />
+                  <div className="leading-relaxed">
+                    <strong
+                      className="font-bold text-2xl block"
+                    >
+                      { teacher.name }
+                    </strong>
+                    <span className="text-gray-200 text-sm block">
+                      { teacher.bio }
+                    </span>
+                  </div>
+                </div>
+              )
+            }
           </div>
           <div className="flex flex-col gap-4">
             <a href="#" className={`
